@@ -8,85 +8,95 @@ class ClienteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(cliente.cognome + ' ' + cliente.nome),
-        ),
-        body: SingleChildScrollView(
-            child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Image.network(
-                    'https://www.giurisprudenzapenale.com/wp-content/uploads/2013/12/utente.png',
-                    width: 200),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('Cognome: ${cliente.cognome}',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.primary)),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('Nome: ${cliente.nome}',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.primary)),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('Data di nascita: ${cliente.dataNascita}',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.primary)),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('Luogo di nascita: ${cliente.luogoNascita}',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.primary)),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('CF: ${cliente.codiceFiscale}',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.primary)),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('Nazionalità: ${cliente.nazionalita}',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.primary)),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('Indirizzo ${cliente.indirizzo}',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.primary)),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('Email ${cliente.email}',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.primary)),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('Numero tel.: ${cliente.numTelefono}',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.primary)),
-              ),
-            ],
+      appBar: AppBar(
+        title: Text(cliente.cognome + ' ' + cliente.nome),
+      ),
+      body:
+          // SingleChildScrollView(
+          //   child:
+          ListView(
+        padding: const EdgeInsets.all(12),
+        children: <Widget>[
+          Container(
+            height: 150,
+            child: Image.asset(
+                'assets/images/utente.png'),
           ),
-        )));
+          Container(
+            height: 50,
+            padding: const EdgeInsets.all(12),
+            color: Colors.teal[100],
+            child: Text('Cognome: ${cliente.cognome}',
+                style: const TextStyle(
+                    fontSize: 20)),
+          ),
+          Container(
+           height: 50,
+            padding: const EdgeInsets.all(12),
+            color: Colors.teal[100],
+            child: Text('Nome: ${cliente.nome}',
+                style: const TextStyle(
+                    fontSize: 20)),
+          ),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.all(12),
+            color: Colors.teal[100],
+            child: Text('Data di nascita: ${cliente.dataNascita}',
+                style: const TextStyle(
+                    fontSize: 20)),
+          ),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.all(12),
+            color: Colors.teal[100],
+            child: Text('Luogo di nascita: ${cliente.luogoNascita}',
+                style: const TextStyle(
+                    fontSize: 20)),
+          ),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.all(12),
+            color: Colors.teal[100],
+            child: Text('CF: ${cliente.codiceFiscale}',
+                style: const TextStyle(
+                    fontSize: 20)),
+          ),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.all(12),
+            color: Colors.teal[100],
+            child: Text('Nazionalità: ${cliente.nazionalita}',
+                style: const TextStyle(
+                    fontSize: 20)),
+          ),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.all(12),
+            color: Colors.teal[100],
+            child: Text('Indirizzo ${cliente.indirizzo}',
+                style: const TextStyle(
+                    fontSize: 20)),
+          ),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.all(12),
+            color: Colors.teal[100],
+            child: Text('Email ${cliente.email}',
+                style: const TextStyle(
+                    fontSize: 20)),
+          ),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.all(12),
+            color: Colors.teal[100],
+            child: Text('Numero tel.: ${cliente.numTelefono}',
+                style: const TextStyle(
+                    fontSize: 20)),
+          ),
+        ],
+      ),
+      // )
+    );
   }
 }

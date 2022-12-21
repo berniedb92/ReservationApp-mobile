@@ -4,34 +4,35 @@ import 'dart:convert';
 
 import 'package:reservation/cliente.dart';
 import 'package:reservation/clientescreen.dart';
+import 'package:reservation/drawers.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ReservationApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ReservationApp extends StatelessWidget {
+  const ReservationApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'main',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
       ),
-      home: const ReservationApp(),
+      home: const Reservation(),
     );
   }
 }
 
-class ReservationApp extends StatefulWidget {
-  const ReservationApp({super.key});
+class Reservation extends StatefulWidget {
+  const Reservation({super.key});
 
   @override
-  State<ReservationApp> createState() => _ReservationAppState();
+  State<Reservation> createState() => _ReservationState();
 }
 
-class _ReservationAppState extends State<ReservationApp> {
+class _ReservationState extends State<Reservation> {
   String risultato = '';
   List<Cliente> clienti = [];
 
@@ -47,6 +48,7 @@ class _ReservationAppState extends State<ReservationApp> {
       appBar: AppBar(
         title: const Text('Reservation app'),
       ),
+      drawer: const Drawers(),
       body: 
       ListView.builder(
           itemCount: clienti.length,
@@ -58,7 +60,8 @@ class _ReservationAppState extends State<ReservationApp> {
                               builder: (_) => ClienteScreen(clienti[posizione]));
                           Navigator.push(context, route);
                         },
-                leading: const FlutterLogo(),
+                leading: Image.asset(
+                'assets/images/utente.png'),
                 title: Text(clienti[posizione].cognome),
                 subtitle: Text(clienti[posizione].nome),
               ),
@@ -74,8 +77,8 @@ class _ReservationAppState extends State<ReservationApp> {
     final Uri url = Uri.http(dominio, percorso);
 
     http.get(url).then((value) {
-      print(value);
       final resJson = json.decode(value.body);
+      print(resJson);
       final clientiMap = resJson;
       clienti =
           clientiMap?.map<Cliente>((maps) => Cliente.fromMap(maps))?.toList() ??
