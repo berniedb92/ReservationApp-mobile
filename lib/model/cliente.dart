@@ -34,4 +34,5 @@ class Cliente {
     email = mappa['email'];
     numTelefono = mappa['numTelefono'];
   }
+
 }
