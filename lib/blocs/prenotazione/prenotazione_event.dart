@@ -6,8 +6,8 @@ abstract class PrenotazioneEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
-class PrenotazioneChange extends PrenotazioneEvent {
 
+class PrenotazioneChange extends PrenotazioneEvent {
   String? date;
   int? campo;
 
@@ -18,47 +18,36 @@ class PrenotazioneChange extends PrenotazioneEvent {
 }
 
 class PrenotazioneDropdownChange extends PrenotazioneEvent {
+  String change;
+  String modInizio;
+  String modFine;
 
-  String? change;
-
-  PrenotazioneDropdownChange(this.change);
-
-  @override
-  List<Object> get props => [];
-}
-
-class PrenotazioneModalitaInizioChange extends PrenotazioneEvent {
-
-  String? mod;
-
-  PrenotazioneModalitaInizioChange(this.mod);
+  PrenotazioneDropdownChange(this.change, this.modInizio, this.modFine);
 
   @override
-  List<Object> get props => [];
-}
-
-class PrenotazioneModalitaFineChange extends PrenotazioneEvent {
-
-  String? mod;
-
-  PrenotazioneModalitaFineChange(this.mod);
-
-  @override
-  List<Object> get props => [];
+  List<Object> get props => [change, modInizio, modFine];
 }
 
 class PrenotazioneAddChange extends PrenotazioneEvent {
+  String codice1;
+  String codice2;
+  String? codice3;
+  String? codice4;
+  String data;
+  String inizio;
+  String fine;
+  String mod;
+  String campo;
 
-  Prenotazione? pren;
-
-  PrenotazioneAddChange(this.pren);
+  PrenotazioneAddChange(this.data, this.inizio, this.fine, this.mod, this.campo,
+      this.codice1, this.codice2,
+      [this.codice3, this.codice4]);
 
   @override
   List<Object> get props => [];
 }
 
 class PrenotazioneCampo extends PrenotazioneEvent {
-
   int? numero;
 
   PrenotazioneCampo(this.numero);
@@ -67,22 +56,3 @@ class PrenotazioneCampo extends PrenotazioneEvent {
   List<Object> get props => [];
 }
 
-class PrenotazioneTessera1 extends PrenotazioneEvent {
-
-  int? codice1;
-
-  PrenotazioneTessera1(this.codice1);
-
-  @override
-  List<Object> get props => [];
-}
-
-class PrenotazioneTessera2 extends PrenotazioneEvent {
-
-  int? codice2;
-
-  PrenotazioneTessera2(this.codice2);
-
-  @override
-  List<Object> get props => [];
-}

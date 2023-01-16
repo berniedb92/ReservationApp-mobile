@@ -27,14 +27,9 @@ class Tessera {
   Tessera.fromMap(Map<String, dynamic> mappa) {
     codiceTessera = mappa['codiceTessera'];
     dataTesseramento = mappa['dataTesseramento'];
-    tipo =
-        mappa['tipo']['tipo'] == null ? '' : mappa['tipo']['tipo'].toString();
-    integrazione = mappa['integrazione']['tipo'] == null
-        ? ''
-        : mappa['integrazione']['tipo'].toString();
-    clienteTess = mappa['clienteTess']['cognome'] == null
-        ? ''
-        : mappa['clienteTess']['cognome'].toString();
+    tipo = mappa['tipo'] == null ? '' : mappa['tipo']['tipo'];
+    integrazione = mappa['integrazione'] == null ? '' : mappa['integrazione']['tipo'];
+    clienteTess = mappa['clienteTess'] == null ? '' : mappa['clienteTess']['cognome'];
     scadenzaCertificato = mappa['scadenzaCertificato'];
     scadenzaTessera = mappa['scadenzaTessera'];
     attiva = mappa['attiva'];

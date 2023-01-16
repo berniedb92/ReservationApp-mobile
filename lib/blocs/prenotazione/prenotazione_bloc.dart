@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -14,173 +15,78 @@ part 'prenotazione_state.dart';
 
 class PrenotazioneBloc extends Bloc<PrenotazioneEvent, PrenotazioneState> {
   final PrenotazioniRepository _prenotazioniRepository;
-  String? sel;
-  String? modInizio;
-  String? modFine;
 
   PrenotazioneBloc({required PrenotazioniRepository prenotazioniRepository})
       : _prenotazioniRepository = prenotazioniRepository,
-        super(PrenotazioneState()) {
+        super(PrenotazioneState(
+            select: 'Singolo', modInizio: '8:00', modFine: '9:00')) {
     on<PrenotazioneChange>(_caricaPrenotazioni);
     on<PrenotazioneDropdownChange>(_caricaDrop);
-    on<PrenotazioneModalitaInizioChange>(_caricaModInizio);
-    on<PrenotazioneModalitaFineChange>(_caricaModFine);
     on<PrenotazioneAddChange>(_addPrenotazione);
-    on<PrenotazioneCampo>(_caricaCampo);
-    on<PrenotazioneTessera1>(_caricaTessera1);
-    on<PrenotazioneTessera2>(_caricaTessera2);
   }
 
   void _caricaPrenotazioni(
       PrenotazioneChange event, Emitter<PrenotazioneState> emit) async {
-    final prenotazioni = await _prenotazioniRepository.caricaPrenotazioni(
+    List<Prenotazione>? prenotazioni;
+
+    prenotazioni = await _prenotazioniRepository.caricaPrenotazioni(
         event.date!, event.campo!);
 
-    final campi = await _prenotazioniRepository.caricaCampo();
+    print('bloccc prenotazioni' + event.date!);
 
-    print('bloccc' + event.date!);
-
-    emit(state.copyWith(
-        message: state.message,
-        tessera1: state.tessera1,
-        tessera2: state.tessera2,
-        campo: state.campo,
-        prenotazioni: prenotazioni,
-        modInizio: state.modInizio,
-        modFine: state.modFine,
-        select: state.select,
-        campi: campi));
+    emit(state.copyWith(prenotazioni: prenotazioni));
   }
 
   void _caricaDrop(
       PrenotazioneDropdownChange event, Emitter<PrenotazioneState> emit) async {
     print(event.change);
+    String? sel;
+    String? modI;
+    String? modF;
 
-    this.sel = event.change!;
+    sel = event.change!;
+    modI = event.modInizio!;
+    modF = event.modFine!;
 
-    emit(state.copyWith(
-        message: state.message,
-        tessera1: state.tessera1,
-        tessera2: state.tessera2,
-        campo: state.campo,
-        prenotazioni: state.prenotazioni,
-        modInizio: state.modInizio,
-        modFine: state.modFine,
-        select: sel,
-        campi: state.campi));
-  }
+    print('bloccccc sel ${sel}');
+    print('bloccccc sel ${modI}');
+    print('bloccccc sel ${modF}');
 
-  void _caricaModInizio(PrenotazioneModalitaInizioChange event,
-      Emitter<PrenotazioneState> emit) async {
-    print(event.mod);
-
-    this.modInizio = event.mod!;
-
-    emit(state.copyWith(
-        message: state.message,
-        tessera1: state.tessera1,
-        tessera2: state.tessera2,
-        campo: state.campo,
-        prenotazioni: state.prenotazioni,
-        modInizio: modInizio,
-        modFine: state.modFine,
-        select: state.select,
-        campi: state.campi));
-  }
-
-  void _caricaModFine(PrenotazioneModalitaFineChange event,
-      Emitter<PrenotazioneState> emit) async {
-    print(event.mod);
-
-    this.modFine = event.mod!;
-
-    emit(state.copyWith(
-        message: state.message,
-        tessera1: state.tessera1,
-        tessera2: state.tessera2,
-        campo: state.campo,
-        prenotazioni: state.prenotazioni,
-        modInizio: state.modInizio,
-        modFine: modFine,
-        select: state.select,
-        campi: state.campi));
+    emit(state.copyWith(modInizio: modI, modFine: modF, select: sel));
   }
 
   void _addPrenotazione(
       PrenotazioneAddChange event, Emitter<PrenotazioneState> emit) async {
     InfoMsg? message;
-
-    message = await _prenotazioniRepository.aggiungiPrenotazione(event.pren!);
-
-    emit(state.copyWith(
-        message: message.message,
-        tessera1: state.tessera1,
-        tessera2: state.tessera2,
-        campo: state.campo,
-        prenotazioni: state.prenotazioni,
-        modInizio: state.modInizio,
-        modFine: state.modFine,
-        select: state.select,
-        campi: state.campi));
-  }
-
-  void _caricaCampo(
-      PrenotazioneCampo event, Emitter<PrenotazioneState> emit) async {
+    Tessera tessera1;
+    Tessera tessera2;
+    Tessera tessera3;
+    Tessera tessera4;
     Campo? campo;
 
-    campo = await _prenotazioniRepository.caricaCampoId(event.numero!);
+    var date = DateTime.parse(event.data);
+    var inizio = DateTime.parse('1970-01-01T${state.modInizio}:00.000+00:00');
+    var fine = DateTime.parse('1970-01-01T${state.modFine}:00.000+00:00');
+    int g1 = int.tryParse(event.codice1) ?? 0;
+    int g2 = int.tryParse(event.codice2) ?? 0;
+    int? g3 = int.tryParse(event.codice3 ?? '-1');
+    int? g4 = int.tryParse(event.codice4 ?? '-1');
 
-    print('bloccccccccccc ${campo.numero}');
+    tessera1 = await _prenotazioniRepository.caricaTessereCodice(g1);
+    tessera2 = await _prenotazioniRepository.caricaTessereCodice(g2);
+    tessera3 = await _prenotazioniRepository.caricaTessereCodice(g3 ?? -1);
+    tessera4 = await _prenotazioniRepository.caricaTessereCodice(g4 ?? -1);
 
-    emit(state.copyWith(
-        message: state.message,
-        tessera1: state.tessera1,
-        tessera2: state.tessera2,
-        campo: campo,
-        prenotazioni: state.prenotazioni,
-        modInizio: state.modInizio,
-        modFine: state.modFine,
-        select: state.select,
-        campi: state.campi));
-  }
+    var campoInt = int.tryParse(event.campo) ?? 0;
+    campo = await _prenotazioniRepository.caricaCampoId(campoInt);
 
-  void _caricaTessera1(
-      PrenotazioneTessera1 event, Emitter<PrenotazioneState> emit) async {
-    Tessera? tessera1;
+    Prenotazione prenotazione = Prenotazione(Random().nextInt(9999), date,
+        inizio, fine, event.mod, campo, tessera1, tessera2, tessera3, tessera4);
 
-    tessera1 = await _prenotazioniRepository.caricaTessereCodice(event.codice1!);
+    message = await _prenotazioniRepository.aggiungiPrenotazione(prenotazione);
 
-    print('bloccccccccccc ${tessera1.codiceTessera}');
+    print('bloccccc message ${message.message}');
 
-    emit(state.copyWith(
-        message: state.message,
-        tessera1: tessera1,
-        tessera2: state.tessera2,
-        campo: state.campo,
-        prenotazioni: state.prenotazioni,
-        modInizio: state.modInizio,
-        modFine: state.modFine,
-        select: state.select,
-        campi: state.campi));
-  }
-
-  void _caricaTessera2(
-      PrenotazioneTessera2 event, Emitter<PrenotazioneState> emit) async {
-    Tessera? tessera2;
-
-    tessera2 = await _prenotazioniRepository.caricaTessereCodice(event.codice2!);
-
-    print('bloccccccccccc ${tessera2.codiceTessera}');
-
-    emit(state.copyWith(
-        message: state.message,
-        tessera1: state.tessera1,
-        tessera2: tessera2,
-        campo: state.campo,
-        prenotazioni: state.prenotazioni,
-        modInizio: state.modInizio,
-        modFine: state.modFine,
-        select: state.select,
-        campi: state.campi));
+    emit(state.copyWith(message: message.message));
   }
 }

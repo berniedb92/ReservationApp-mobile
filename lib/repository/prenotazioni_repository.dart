@@ -64,7 +64,7 @@ class PrenotazioniRepository {
     if (response.statusCode == 200 && response.body.isNotEmpty) {
       return Tessera.fromMap(json.decode(response.body));
     } else {
-      throw new Exception('errore lettura dati');
+      return Tessera(-1, "", "", "", "", "", "", false, 0, "", false);
     }
   }
 
@@ -76,7 +76,8 @@ class PrenotazioniRepository {
       return List<Prenotazione>.from(
           json.decode(response.body).map((data) => Prenotazione.fromMap(data)));
     } else {
-      throw new Exception('errore lettura dati');
+      //throw new Exception('errore lettura dati');
+      return [];
     }
   }
 
@@ -112,7 +113,7 @@ class PrenotazioniRepository {
   print('numero campo'+ pren.campo.numero.toString());
 
     Map prenotazione = {
-      'id': pren.id,
+      'codicePrenotazione': pren.codicePrenotazione,
       'data': pren.data!.toIso8601String(),
       'oraInizio':pren.oraInizio!.toIso8601String(),
       'oraFine': pren.oraFine!.toIso8601String(),
@@ -136,6 +137,24 @@ class PrenotazioniRepository {
         },
         'integrazione': {
           'tipo': pren.giocatore2.integrazione
+        }
+      },
+      'giocatore3': {
+        'codiceTessera': pren.giocatore3?.codiceTessera,
+        'tipo': {
+          'tipo': pren.giocatore3?.tipo
+        },
+        'integrazione': {
+          'tipo': pren.giocatore3?.integrazione
+        }
+      },
+      'giocatore4': {
+        'codiceTessera': pren.giocatore4?.codiceTessera,
+        'tipo': {
+          'tipo': pren.giocatore4?.tipo
+        },
+        'integrazione': {
+          'tipo': pren.giocatore4?.integrazione
         }
       },
     };

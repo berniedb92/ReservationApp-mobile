@@ -10,15 +10,11 @@ import '../model/campo.dart';
 import '../model/prenotazione.dart';
 import '../repository/prenotazioni_repository.dart';
 
-class Campo1 extends StatefulWidget {
+class Campo1 extends StatelessWidget {
   Campo1({Key? key}) : super(key: key);
 
-  @override
-  State<Campo1> createState() => _Campo1State();
-}
-
-class _Campo1State extends State<Campo1> {
   List<Prenotazione> prenotazioni = [];
+  bool load = false;
 
   TextEditingController dateController = TextEditingController();
 
@@ -26,6 +22,24 @@ class _Campo1State extends State<Campo1> {
   TextEditingController numero2Controller = TextEditingController();
 
   List<String> camp = [];
+
+  // final List<String> timeSelect = [
+  //   '8:00 - 9:00',
+  //   '9:00 - 10:00',
+  //   '10:00 - 11:00',
+  //   '11:00 - 12:00',
+  //   '12:00 - 13:00',
+  //   '13:00 - 14:00',
+  //   '14:00 - 15:00',
+  //   '15:00 - 16:00',
+  //   '16:00 - 17:00',
+  //   '17:00 - 18:00',
+  //   '18:00 - 19:00',
+  //   '19:00 - 20:00',
+  //   '20:00 - 21:00',
+  //   '21:00 - 22:00',
+  //   '22:00 - 23:00'
+  // ];
 
   String formatTime(DateTime time) {
     return DateFormat.Hm().format(time);
@@ -41,185 +55,126 @@ class _Campo1State extends State<Campo1> {
       backgroundColor: Colors.white,
       drawer: const Drawers(),
       appBar: AppBar(
-        title: Text('Campo 1'),
+        title: Text('Prenotazioni campo 1'),
       ),
       body: BlocBuilder<PrenotazioneBloc, PrenotazioneState>(
-        builder: (context, state) {
-          if (prenotazioni.isEmpty) {
-            context
-                .read<PrenotazioneBloc>()
-                .add(PrenotazioneChange(DateTime.now().toString(), 1));
-            state.prenotazioni == null || state.prenotazioni == []
-                ? prenotazioni = []
-                : prenotazioni = state.prenotazioni!;
-          }
-          return Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(children: [
-              // const Text(
-              //   'Lista Prenotazioni',
-              //   style: TextStyle(
-              //     fontSize: 25,
-              //   ),
-              // ),
-              Container(
-                height: 15,
-                padding: const EdgeInsets.all(50.0),
-              ),
-              TextField(
-                  controller:
-                      dateController, //editing controller of this TextField
-                  decoration: const InputDecoration(
-                      icon: Icon(Icons.calendar_today), //icon of text field
-                      labelText:
-                          "Clicca per inserire la data" //label text of field
-                      ),
-                  readOnly: true, // when true user cannot edit text
-                  onTap: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(1950),
-                        //DateTime.now() - not to allow to choose before today.
-                        lastDate: DateTime(2100));
+          builder: (context, state, [bool mounted = true]) {
+            prenotazioni = [];
 
-                    if (pickedDate != null) {
-                      print(
-                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                      String formattedDate =
-                          DateFormat('yyyy-MM-dd').format(pickedDate);
-                      print(
-                          formattedDate); //formatted date output using intl package =>  2021-03-16
-                      setState(() {
-                        prenotazioni = [];
-                        dateController.text = formattedDate;
+            print('${state.message}messageeee');
+            state.prenotazioni == null || state.prenotazioni == []
+                  ? prenotazioni = []
+                  : prenotazioni = state.prenotazioni!;
+
+              if(state.prenotazioni == null || state.prenotazioni == []){
+                load = true;
+                context.read<PrenotazioneBloc>().add(PrenotazioneChange(
+                   DateTime.now().toString(), 1));
+              }
+
+            return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(children: [
+                  Container(
+                    height: 15,
+                    padding: const EdgeInsets.all(50.0),
+                  ),
+                  TextField(
+                      controller:
+                          dateController, //editing controller of this TextField
+                      decoration: const InputDecoration(
+                          icon: Icon(Icons.calendar_today), //icon of text field
+                          labelText:
+                              "Clicca per inserire la data" //label text of field
+                          ),
+                      readOnly: true, // when true user cannot edit text
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1950),
+                            //DateTime.now() - not to allow to choose before today.
+                            lastDate: DateTime(2100)
+
+                        );
+
+                        if (pickedDate != null) {
+                          prenotazioni = [];
+                          print(
+                              pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
+                          print(
+                              formattedDate);
+                          dateController.text = formattedDate;
+
+                        }
+                        if (!mounted) return;
                         context.read<PrenotazioneBloc>().add(PrenotazioneChange(
-                            dateController.text.toString(),
-                            1)); //set output date to TextField value.
-                      });
-                      context.read<PrenotazioneBloc>().add(PrenotazioneChange(
-                          dateController.text.toString(), 1));
-                    } else {}
-                  }),
-              Container(
-                height: 30,
-              ),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: prenotazioni.length,
-                    itemBuilder: (BuildContext context, int posizione) {
-                      return Card(
-                        child: ListTile(
-                          onTap: () {},
-                          // => context.goNamed(
-                          //   "infocliente",
-                          //   params: {"id": clienti[posizione].id.toString()},
-                          // ),
-                          leading: Image.asset('assets/images/tennis-balls.png',
-                              width: 70),
-                          title: Text(
-                              formatTime(prenotazioni[posizione].oraInizio!) +
-                                  ' - ' +
-                                  formatTime(prenotazioni[posizione].oraFine!) +
-                                  ' ' +
-                                  prenotazioni[posizione].giocatore1!.codiceTessera.toString() +
-                                  ' ' +
-                                  prenotazioni[posizione].giocatore2!.codiceTessera.toString()),
-                          subtitle:
-                              Text(formatDate(prenotazioni[posizione].data!)),
-                        ),
-                      );
-                    }),
-              )
-            ]),
-          );
-        },
-      ),
+                            dateController.text.toString(), 1));
+
+                      }),
+                  Container(
+                    height: 30,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: prenotazioni.length,
+                        itemBuilder: (BuildContext context, int posizione) {
+                          return Card(
+
+                            child: ListTile(
+
+                              onTap: () {},
+                              leading:
+                               Image.asset('assets/images/tennis-balls.png',
+                                   width: 70),
+                              title:
+                              Text(
+                                ''
+                                  '${formatTime(prenotazioni[posizione].oraInizio!)} - ${formatTime(prenotazioni[posizione].oraFine!)}'
+                                   ),
+                              subtitle:
+                                  Text(
+                                    ''
+                                      '${prenotazioni[posizione].giocatore1!.clienteTess} - ${prenotazioni[posizione].giocatore2!.clienteTess}'
+                                  ),
+                            ),
+                          );
+                        }),
+                  )
+                ]),
+
+            );
+          },
+        ),
+      
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          BlocProvider<PrenotazioneBloc>(
-            create: (context) {
-              return PrenotazioneBloc(
-                  prenotazioniRepository:
-                      RepositoryProvider.of<PrenotazioniRepository>(context));
-            },
-            child: FloatingActionButton(
-              key: const Key('counterView_increment_floatingActionButton'),
+            FloatingActionButton(
               child: const Icon(Icons.add),
               onPressed: () => context.goNamed(
                 "prenotazione",
                 params: {"campo": '1'},
               ),
             ),
-          ),
           const SizedBox(height: 8),
         ],
       ),
     );
   }
 
-  // void _showDialog() {
-  //   // flutter defined function
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       // return object of type Dialog
-  //       return AlertDialog(
-  //         title: new Text("Inserisci Prenotazione"),
-  //         content: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //             children: <Widget>[
-  //
-  //               DropdownButton<String>(
-  //                 value: oraInizio,
-  //                 items: timeSelect.map((String value) {
-  //                   return DropdownMenuItem(value: value, child: Text(value));
-  //                 }).toList(),
-  //                   onChanged: (value) => context.read<PrenotazioneBloc>().add(
-  //                       PrenotazioneDropdownChange(value))
-  //               ),
-  //
-  //               DropdownButton<String>(
-  //                 value: oraFine,
-  //                 items: timeSelect.map((String value) {
-  //                   return DropdownMenuItem(value: value, child: Text(value));
-  //                 }).toList(),
-  //                 onChanged: (value) => context.read<PrenotazioneBloc>().add(
-  //                   PrenotazioneDropdownChange(value))
-  //               ),
-  //               Flexible(
-  //                 child: TextField(
-  //                   controller: numero1Controller,
-  //                   keyboardType: TextInputType.number,
-  //                   style: TextStyle(),
-  //                   decoration: const InputDecoration(hintText: 'Numero 1'),
-  //                 ),
-  //               ),
-  //               const SizedBox(
-  //                 width: 20.0,
-  //               ),
-  //               Flexible(
-  //                 child: TextField(
-  //                   controller: numero2Controller,
-  //                   keyboardType: TextInputType.number,
-  //                   style: TextStyle(),
-  //                   decoration: const InputDecoration(hintText: 'Numero 2'),
-  //                 ),
-  //               )
-  //             ]),
-  //         actions: <Widget>[
-  //           // usually buttons at the bottom of the dialog
-  //           TextButton(
-  //             child: new Text("Close"),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+  List<String> splitTime(List<String> l) {
+    List<String> splittedTime = [];
+      for(var i = 0; i<l.length; i++) {
+
+        List<String> splitt = l[i].split('-');
+        splittedTime.add(splitt[1].trimLeft());
+      }
+      print(splittedTime);
+
+      return splittedTime;
+  }
 }

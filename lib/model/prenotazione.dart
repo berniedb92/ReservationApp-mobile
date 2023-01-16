@@ -5,15 +5,15 @@ import 'package:reservation/model/tessera.dart';
 import 'campo.dart';
 
 class Prenotazione {
-  Tessera tesseraInit = Tessera(-1, "", "", "", "", "", "", false, 0, "", false);
-  Campo campoInit = Campo(-1, '', '');
+  Map<String, dynamic> mappaNull = {
+    'null': 'nessun valore'
+  };
 
-  late int? id;
+  late int? codicePrenotazione;
   late DateTime? data;
   late DateTime? oraInizio;
   late DateTime? oraFine;
   late String? modalita;
-  late int? codicePrenotazione;
   late Campo campo;
   late Tessera giocatore1;
   late Tessera giocatore2;
@@ -22,7 +22,7 @@ class Prenotazione {
   late String? evento;
 
   Prenotazione(
-      this.id,
+      this.codicePrenotazione,
       this.data,
       this.oraInizio,
       this.oraFine,
@@ -35,17 +35,16 @@ class Prenotazione {
       this.evento]);
 
   Prenotazione.fromMap(Map<String, dynamic> mappa) {
-    id = mappa['id'];
+    codicePrenotazione = mappa['codicePrenotazione'];
     data = DateTime.parse(mappa['data']);
     oraInizio = DateTime.parse(mappa['oraInizio']);
     oraFine = DateTime.parse(mappa['oraFine']);
     modalita = mappa['modalita'];
-    codicePrenotazione = mappa['codicePrenotazione'];
-    campo = Campo.fromMap(mappa['campo'] ?? campoInit);
-    giocatore1 = Tessera.fromMap(mappa['giocatore1'] ?? tesseraInit);
-    giocatore2 = Tessera.fromMap(mappa['giocatore2'] ?? tesseraInit);
-    // giocatore3 = Tessera.fromMap(mappa['giocatore3'] ?? tesseraInit);
-    // giocatore4 = Tessera.fromMap(mappa['giocatore4'] ?? tesseraInit);
+    campo = Campo.fromMap(mappa['campo']);
+    giocatore1 = Tessera.fromMap(mappa['giocatore1'] ?? mappaNull);
+    giocatore2 = Tessera.fromMap(mappa['giocatore2'] ?? mappaNull);
+    giocatore3 = Tessera.fromMap(mappa['giocatore3'] ?? mappaNull);
+    giocatore4 = Tessera.fromMap(mappa['giocatore4'] ?? mappaNull);
     evento = mappa['evento'];
   }
 }
